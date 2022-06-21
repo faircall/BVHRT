@@ -7,10 +7,12 @@
 #include "sim.h"
 
 
-int main()
+int main_loop(SDLPlatform platform);
+
+int main(int argc, char **argv)
 {
-    int screenWidth = 1280;
-    int screenHeight = 720;
+    int screenWidth = 320;
+    int screenHeight = 200;
     
     SDLPlatform platform = init_sdl(SDL_INIT_EVERYTHING, screenWidth, screenHeight, "bvh ray");
 
@@ -26,38 +28,28 @@ int main()
     return 0;
 }
 
-World update_world(World currentWorldState, float dt)
-{
-
-    World result = currentWorldState;
-
-    return result;
-}
-
-World init_world(void)
-{
-    World result;
-    SDL_Rect testRect = {.x = 200, .y = 200, .w = 50, .h = 50};
-    result.test = testRect;
-
-    return result;
-}
 
 int main_loop(SDLPlatform platform)
 {
     bool run = true;
-    World currentWorldState = init_world();
+    World currentWorldState = init_world(1);
     
     World nextWorldState;
+    float lastTime = 0.0f;
     
     while (run) {
-	float dt = ((float)SDL_GetTicks())/1000.0f; // this is a timer function that can be abstracted
+	float currentTime = (float)SDL_GetTicks();
+	float dt = (currentTime - lastTime) / 1000.0f;
+	lastTime = currentTime;
+	printf("fps is %f\n", 1.0f / dt);
 
 	nextWorldState = update_world(currentWorldState, dt);
 	currentWorldState = nextWorldState;
 	
 	drawWorld(platform, nextWorldState);
     }
+
+    return 0;
 }
 
 

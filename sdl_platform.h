@@ -6,8 +6,8 @@
 
 typedef struct {
     bool created;
-    int screenWidth;
-    int screenHeight;
+    unsigned int screenWidth;
+    unsigned int screenHeight;
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *frameTexture;
