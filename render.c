@@ -56,14 +56,15 @@ void drawWorld(SDLPlatform platform, World world)
     // temp code to be pulled into a function
 
     // think carefully about these, common source of confusion
-    Vec3 cameraPos = {.x = 0.0f, .y = 0.0f, .z = -18.0f};
-    Vec3 p0 = {.x = -1.0f, .y = 1.0f, .z = -15.0f};
-    Vec3 p1 = {.x = 1.0f, .y = 1.0f, .z = -15.0f};
-    Vec3 p2 = {.x = -1.0f, .y = -1.0f, .z = -15.0f};
+    Vec3 cameraPos = {.x = 0.0f, .y = 0.0f, .z = -100.0f};
+    Vec3 p0 = {.x = -1.0f, .y = 1.0f, .z = -90.0f};
+    Vec3 p1 = {.x = 1.0f, .y = 1.0f, .z = -90.0f};
+    Vec3 p2 = {.x = -1.0f, .y = -1.0f, .z = -90.0f};
     
-    Vec3 v = vec3_sub(p1, p0);
-    Vec3 h = vec3_sub(p2, p0);
+    Vec3 h = vec3_sub(p1, p0);
+    Vec3 v = vec3_sub(p2, p0);
     Ray ray;
+    unsigned int triCounter = 0;
     for (unsigned int i = 0; i < platform.screenWidth; i++) {
 	for (unsigned int j = 0; j < platform.screenHeight; j++) {
 	    // could this be precomputed?
@@ -73,24 +74,23 @@ void drawWorld(SDLPlatform platform, World world)
 	    ray.origin = cameraPos;
 	    ray.direction = vec3_normalize(vec3_sub(pixelPos, ray.origin));
 	    ray.t = 1e30f;
-
+	    platform.frameBuffer[i + (j*platform.screenWidth)] = 0xff00ff00;
 	    for (unsigned int k = 0; k < world.triCount; k++) {
 		// test intersection
 		Ray rayResult = intersect_tri(ray, world.tris[k]);
 		if (rayResult.t < ray.t) {
-		    printf("got a hit\n");
+		    //triCounter++;
+		    //printf("tri counter is %d\n", triCounter);
 		    // color the framebuffer
 		    platform.frameBuffer[i + (j*platform.screenWidth)] = 0xffff0000;
-		} else {
-		    platform.frameBuffer[i + (j*platform.screenWidth)] = 0xff00ff00;
-		}
+		} 
 		
 	    }
 
 	    
 	}
     }
-    
+    printf("intersected %d\n triangles this pass\n", triCounter);
 
     SDL_UpdateTexture(platform.frameTexture, NULL, platform.frameBuffer, 4 * platform.screenWidth);
 

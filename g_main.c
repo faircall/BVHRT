@@ -32,7 +32,8 @@ int main(int argc, char **argv)
 int main_loop(SDLPlatform platform)
 {
     bool run = true;
-    World currentWorldState = init_world(1);
+    World currentWorldState = init_world(64);
+    //World currentWorldState = hardcode_world();
     
     World nextWorldState;
     float lastTime = 0.0f;
